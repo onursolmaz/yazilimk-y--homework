@@ -1,3 +1,4 @@
 # yazilimkoyu-homework
 
-<img src="https://github.com/onursolmaz/yazilimk-y--homework/blob/main/src/com/renova/project2/%C3%B6dev.PNG"> </img>
+<img src="https://github.com/onursolmaz/yazilimkoyu-homework/blob/main/src/%C3%B6dev.PNG?raw=true"> </img>
+
