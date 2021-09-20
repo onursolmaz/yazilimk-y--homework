@@ -2,7 +2,6 @@ package com.renova.project2;
 
 import com.renova.project2.customer.Company;
 import com.renova.project2.customer.Customer;
-import com.renova.project2.customer.Individual;
 import com.renova.project2.order.Order;
 import com.renova.project2.order.OrderItem;
 import com.renova.project2.product.Product;
@@ -34,9 +33,9 @@ public class Main {
 
         while (loopStatus) {
 
-            printStockProduct(productList);
+            printProducts(productList);
 
-            System.out.print("==> add to basket[1] show my basket[2] to order and exit[3]  exit[4]\n: ");
+            System.out.print("=> add to basket[1] show my basket[2] to order and exit[3]  exit[4] : ");
             int choice = input.nextInt();
 
             switch (choice){
@@ -65,14 +64,13 @@ public class Main {
         }
     }
 
-
     public static void showMyBasket() {
         System.out.println("-------- MY BASKET-----------");
         for(OrderItem orderItem:orderItemList){
             System.out.println("Product name: "+ orderItem.getProduct().getName()+" Price : "+ orderItem.getProduct().getRetailPrice()+
                     " quantity: "+ orderItem.getQuantity());
         }
-        System.out.println("----------------");
+        System.out.println("--------------------");
 
     }
 
@@ -88,7 +86,6 @@ public class Main {
         double totalPrice=order.getOrderTotal();
         // Company customer has a discount
         if(customerType instanceof Company){
-            System.out.println(customerType.getClass().getName());
             double discountRate=(double)((Company)customerType).getDiscount()/100;
             totalPrice-=totalPrice*discountRate;
         }
@@ -97,7 +94,7 @@ public class Main {
 
     }
 
-    public static void printStockProduct(List<Product> productList) {
+    public static void printProducts(List<Product> productList) {
         System.out.println("-----------Product List-------------");
         for (Product product : productList) {
             System.out.println((productList.indexOf(product) + 1) + "." + product.getName() + "--> PRICE : " + product.getRetailPrice() + "$");
