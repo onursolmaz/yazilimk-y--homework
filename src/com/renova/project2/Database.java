@@ -28,7 +28,7 @@ public class Database {
     }
 
     public static Customer getCompanyCustomer() {
-        Customer companyCustomer = new Company(5, "Renova", "Ankara", "53444", 15, "54235411");
+        Customer companyCustomer = new Company(5, "Renova", "İstanbul", "53444", 15, "54235411");
         return companyCustomer;
     }
 

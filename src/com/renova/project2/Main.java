@@ -21,11 +21,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // choise your customer type
+        // choice your customer type
         System.out.println("Are you Company or Individual ?\n   Company : 1 \n   Individual : 2 ");
         System.out.println("Select your type: ");
 
-        // if selected 1 programs works according the compant customer, if selected 2 works individual customer
+        // if selected 1 programs works according the company customer, if selected 2 works individual customer
         int choiceForCustomerType = input.nextInt();
         customerType = choiceForCustomerType == 1 ? Database.getCompanyCustomer() : Database.getIndividualCustomer();
 
