@@ -3,89 +3,105 @@ package com.renova.project2;
 import com.renova.project2.customer.Company;
 import com.renova.project2.customer.Customer;
 import com.renova.project2.customer.Individual;
-import com.renova.project2.product.Hardware;
-import com.renova.project2.product.Manual;
+import com.renova.project2.order.Order;
+import com.renova.project2.order.OrderItem;
 import com.renova.project2.product.Product;
-import com.renova.project2.product.Software;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
+    // define the variables required for the program to run.
     static Scanner input = new Scanner(System.in);
+    static List<Product> productList = Database.getProductList();
+    public static List<OrderItem> orderItemList = new ArrayList<>();
+    public static Customer customerType;
 
     public static void main(String[] args) {
 
-        //create a new default customer as two type
-        Customer companyCustomer = new Company(5, "Renova", "Ankara", "5344442", 15, "Nadir Kırgız");
-        Customer individualCustomer = new Individual(2, "Onur Solmaz", "Ankara", "54324422", "5455775");
+        // choise your customer type
+        System.out.println("Are you Company or Individual ?\n   Company : 1 \n   Individual : 2 ");
+        System.out.println("Select your type: ");
 
-
-        // create new products
-        Product product1 = new Manual("good product", 1, "efective java 3.rd edition", 35.0, "onur solmaz");
-        Product product2 = new Software("nice product", 2, "windows 10", 89.0, "A25SK2K6-21KSO1");
-        Product product3 = new Hardware("fast ssd", 3, "SSD", 250.0, 24);
-        Product product4 = new Hardware("24'inc ıps screen", 4, "LG Screen", 850.0, 12);
-        Product product5 = new Software("microsoft office all packet", 5, "Office 365", 50.0, "C25SK2K6-21KSO3");
-
-        List<Product> productsStock = new ArrayList<>(Arrays.asList(product1, product2, product3, product4, product5));
-
+        // if selected 1 programs works according the compant customer, if selected 2 works individual customer
+        int choiceForCustomerType = input.nextInt();
+        customerType = choiceForCustomerType == 1 ? Database.getCompanyCustomer() : Database.getIndividualCustomer();
 
         boolean loopStatus = true;
 
         while (loopStatus) {
 
-            System.out.println("Are you Company or Individual\n   Company : 1 \n  Individual : 2 ");
-            System.out.print("Select your type: ");
-            int choiceForCustomerType = input.nextInt();
-            Customer selectedCustomerType = choiceForCustomerType == 1 ? companyCustomer : individualCustomer;
-            printStockProduct(productsStock);
+            printStockProduct(productList);
 
-            // todo new function
-            System.out.print("please select your item no : ");
-            int selectedProductIndex = input.nextInt();
-            System.out.print("Enter your quantity : ");
-            int selectedQuantity = input.nextInt();
+            System.out.print("==> add to basket[1] show my basket[2] to order and exit[3]  exit[4]\n: ");
+            int choice = input.nextInt();
 
-            /***
-             *
-             * .......
-             */
+            switch (choice){
 
+                case 1:
+                    System.out.print("Enter your product index : ");
+                    int productIndex = input.nextInt()-1;
+                    System.out.print("Enter quantity : ");
+                    int quantity = input.nextInt();
+                    addToBasket(productIndex,quantity);
+                    break;
 
+                case 2:
+                    showMyBasket();
+                    break;
 
+                case 3:
+                    createOrder();
+                    loopStatus=false;
+                    break;
+
+                case 4:
+                    loopStatus=false;
+                    break;
+            }
         }
+    }
 
 
-        //Create order items
-//        OrderItem orderItem1=new OrderItem(1,2,product1);
-//        OrderItem orderItem2=new OrderItem(2,4,product2);
-//        List<OrderItem> items=new ArrayList<>();
-//        items.add(orderItem1);
-//        items.add(orderItem2);
-
-         //create order
-//        Order order=new Order(individualCustomer,1,items, java.util.Date.from( Instant.now()));
-//        System.out.println(order.getOrderTotal());
-//           print order total (426.0)
+    public static void showMyBasket() {
+        System.out.println("-------- MY BASKET-----------");
+        for(OrderItem orderItem:orderItemList){
+            System.out.println("Product name: "+ orderItem.getProduct().getName()+" Price : "+ orderItem.getProduct().getRetailPrice()+
+                    " quantity: "+ orderItem.getQuantity());
+        }
+        System.out.println("----------------");
 
     }
 
-    public static void addToBasket(int index,int quantity){
-
-       // todo
-
+    public static void addToBasket(int index, int quantity) {
+        Product product = productList.get(index);
+        OrderItem orderItem = new OrderItem(index+1, quantity, product);
+        orderItemList.add(orderItem);
+        System.out.println("Product added to basket successfully");
     }
 
+    public static void createOrder(){
+        Order order=new Order(customerType,1,orderItemList, java.util.Date.from( Instant.now()));
+        double totalPrice=order.getOrderTotal();
+        // Company customer has a discount
+        if(customerType instanceof Company){
+            System.out.println(customerType.getClass().getName());
+            double discountRate=(double)((Company)customerType).getDiscount()/100;
+            totalPrice-=totalPrice*discountRate;
+        }
+        System.out.println("************\nTotal order price: " + totalPrice);
+        System.out.println("Your order has been successfully created");
+
+    }
 
     public static void printStockProduct(List<Product> productList) {
         System.out.println("-----------Product List-------------");
         for (Product product : productList) {
-            System.out.println((productList.indexOf(product)+1)+"."+product.getName() + "--> PRICE : " + product.getRetailPrice() + "$");
-            System.out.println("--------------------------");
+            System.out.println((productList.indexOf(product) + 1) + "." + product.getName() + "--> PRICE : " + product.getRetailPrice() + "$");
         }
+        System.out.println("--------------------");
     }
 }
